@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro';
+import { club } from '../data/club';
+
+const encodedQuery = encodeURIComponent(club.mapsQuery);
+const mapEmbedUrl = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
+const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
+const currentYear = new Date().getFullYear();
+---
+
+<Base>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio">
+        <span class="brand-badge">{club.short}</span>
+        <span>{club.name}</span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul class="nav-links">
+          <li><a href="#quienes-somos">Quiénes somos</a></li>
+          <li><a href="#categorias">Categorías</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero">
+      <div class="container">
+        <span class="hero-shield">{club.shield}</span>
+        <h1>{club.name}</h1>
+        <p class="hero-motto">{club.motto}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contacto">Contacto</a>
+          <a
+            class="btn btn-outline-light"
+            href={club.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram ({club.instagramHandle})
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="quienes-somos" class="section">
+      <div class="container">
+        <h2 class="section-title">Quiénes somos</h2>
+        <p class="lead">{club.about}</p>
+      </div>
+    </section>
+
+    <section id="categorias" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Horarios y categorías</h2>
+        <div class="categories-grid">
+          {
+            club.categories.map((cat) => (
+              <article class={`category-card ${cat.group === 'Senior' ? 'is-senior' : ''}`}>
+                <span class="category-group">{cat.group}</span>
+                <h3>{cat.name}</h3>
+                <p>{cat.description}</p>
+              </article>
+            ))
+          }
+        </div>
+        <p class="schedule-note">
+          Los horarios de entrenamiento varían según la categoría y la temporada. Escríbenos por
+          privado en{' '}
+          <a href={club.instagramDm} target="_blank" rel="noopener noreferrer">
+            Instagram
+          </a>{' '}
+          o por{' '}
+          <a href={`mailto:${club.email}`}>email</a> y te los pasamos.
+        </p>
+      </div>
+    </section>
+
+    <section id="ubicacion" class="section">
+      <div class="container">
+        <h2 class="section-title">Ubicación</h2>
+        <p class="location-meta">
+          <strong>{club.campo}</strong> — {club.zona}
+        </p>
+        <div class="map-wrapper">
+          <iframe
+            src={mapEmbedUrl}
+            title={`Mapa de ${club.campo} en ${club.zona}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <a
+          class="btn btn-navy"
+          href={mapDirectionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cómo llegar
+        </a>
+      </div>
+    </section>
+
+    <section id="contacto" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Contacto</h2>
+        <p class="lead">
+          ¿Quieres venir a probar o tienes alguna duda? Escríbenos directamente por Instagram o
+          envíanos un correo electrónico.
+        </p>
+        <div class="contact-actions">
+          <a
+            class="btn btn-primary"
+            href={club.instagramDm}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Mensaje directo en Instagram
+          </a>
+          <a class="btn btn-navy" href={`mailto:${club.email}`}>
+            {club.email}
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; {currentYear} {club.name} ({club.short})</span>
+      <a href={club.instagram} target="_blank" rel="noopener noreferrer">
+        {club.instagramHandle}
+      </a>
+    </div>
+  </footer>
+</Base>
