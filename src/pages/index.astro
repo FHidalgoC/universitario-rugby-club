@@ -17,9 +17,9 @@ const currentYear = new Date().getFullYear();
       </a>
       <nav aria-label="Navegación principal">
         <ul class="nav-links">
-          <li><a href="#quienes-somos">Quiénes somos</a></li>
+          <li><a href="#entrenamientos">Entrenos</a></li>
+          <li><a href="#quienes-somos">El club</a></li>
           <li><a href="#categorias">Categorías</a></li>
-          <li><a href="#ubicacion">Ubicación</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
       </nav>
@@ -39,30 +39,68 @@ const currentYear = new Date().getFullYear();
         <span class="hero-shield">{club.shield}</span>
         <h1>{club.name}</h1>
         <p class="hero-motto">{club.motto}</p>
+
+        <a class="training-card" href="#entrenamientos">
+          <span class="training-card-label">Entrenamos</span>
+          <span class="training-card-when">
+            <strong>{club.training.days}</strong>
+            <span>{club.training.hours}</span>
+          </span>
+          <span class="training-card-where">{club.campo} · {club.zona}</span>
+        </a>
+
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#contacto">Contacto</a>
-          <a
-            class="btn btn-outline-light"
-            href={club.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Instagram ({club.instagramHandle})
+          <a class="btn btn-primary" href={mapDirectionsUrl} target="_blank" rel="noopener noreferrer">
+            Cómo llegar
           </a>
+          <a class="btn btn-outline-light" href="#contacto">Contacto</a>
         </div>
       </div>
     </section>
 
-    <section id="quienes-somos" class="section">
+    <section id="entrenamientos" class="section">
+      <div class="container">
+        <h2 class="section-title">Dónde y cuándo entrenamos</h2>
+        <div class="schedule-grid">
+          <div class="schedule-item">
+            <span class="schedule-label">Días</span>
+            <strong>{club.training.days}</strong>
+          </div>
+          <div class="schedule-item">
+            <span class="schedule-label">Horario</span>
+            <strong>{club.training.hours}</strong>
+          </div>
+          <div class="schedule-item">
+            <span class="schedule-label">Lugar</span>
+            <strong>{club.campo}</strong>
+            <span>{club.zona}</span>
+          </div>
+        </div>
+        <div class="map-wrapper">
+          <iframe
+            src={mapEmbedUrl}
+            title={`Mapa de ${club.campo} en ${club.zona}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <a class="btn btn-navy" href={mapDirectionsUrl} target="_blank" rel="noopener noreferrer">
+          Cómo llegar
+        </a>
+      </div>
+    </section>
+
+    <section id="quienes-somos" class="section section-alt">
       <div class="container">
         <h2 class="section-title">Quiénes somos</h2>
         <p class="lead">{club.about}</p>
       </div>
     </section>
 
-    <section id="categorias" class="section section-alt">
+    <section id="categorias" class="section">
       <div class="container">
-        <h2 class="section-title">Horarios y categorías</h2>
+        <h2 class="section-title">Categorías</h2>
         <div class="categories-grid">
           {
             club.categories.map((cat) => (
@@ -74,41 +112,6 @@ const currentYear = new Date().getFullYear();
             ))
           }
         </div>
-        <p class="schedule-note">
-          Los horarios de entrenamiento varían según la categoría y la temporada. Escríbenos por
-          privado en{' '}
-          <a href={club.instagramDm} target="_blank" rel="noopener noreferrer">
-            Instagram
-          </a>{' '}
-          o por{' '}
-          <a href={`mailto:${club.email}`}>email</a> y te los pasamos.
-        </p>
-      </div>
-    </section>
-
-    <section id="ubicacion" class="section">
-      <div class="container">
-        <h2 class="section-title">Ubicación</h2>
-        <p class="location-meta">
-          <strong>{club.campo}</strong> — {club.zona}
-        </p>
-        <div class="map-wrapper">
-          <iframe
-            src={mapEmbedUrl}
-            title={`Mapa de ${club.campo} en ${club.zona}`}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <a
-          class="btn btn-navy"
-          href={mapDirectionsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Cómo llegar
-        </a>
       </div>
     </section>
 
@@ -120,12 +123,7 @@ const currentYear = new Date().getFullYear();
           envíanos un correo electrónico.
         </p>
         <div class="contact-actions">
-          <a
-            class="btn btn-primary"
-            href={club.instagramDm}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a class="btn btn-primary" href={club.instagramDm} target="_blank" rel="noopener noreferrer">
             Mensaje directo en Instagram
           </a>
           <a class="btn btn-navy" href={`mailto:${club.email}`}>

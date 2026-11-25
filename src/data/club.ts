@@ -18,8 +18,10 @@ export const club = {
   mapsQuery: 'Campo de Rugby José Manuel Samperio, Peñacastillo, Santander',
   about:
     'Club nacido en el entorno universitario de Santander en los años 70 y fundado oficialmente en 1983. Contamos con equipo Senior y escuela de rugby desde M8 hasta M18, y estamos abiertos a cualquiera que quiera probar este deporte.',
-  scheduleNote:
-    'Los horarios de entrenamiento varían según la categoría y la temporada. Escríbenos por privado en Instagram o por email y te los pasamos.',
+  training: {
+    days: 'Martes y jueves',
+    hours: '20:00 – 22:00',
+  },
   categories: [
     {
       name: 'Senior',

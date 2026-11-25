@@ -9,7 +9,7 @@ interface Props {
 
 const {
   title = `${club.name} (${club.short}) — ${club.motto}`,
-  description = `${club.name} (${club.short}). ${club.motto}. ${club.campo}, ${club.zona}. Equipo Senior y escuela M8–M18.`,
+  description = `${club.name} (${club.short}). ${club.motto}. ${club.campo}, ${club.zona}. Entrenamos ${club.training.days.toLowerCase()} de ${club.training.hours}. Equipo Senior y escuela M8–M18.`,
 } = Astro.props;
 
 ---
