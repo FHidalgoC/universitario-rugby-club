@@ -12,7 +12,7 @@ const currentYear = new Date().getFullYear();
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#inicio">
-        <span class="brand-badge">{club.short}</span>
+        <img class="brand-logo" src="/escudo.jpg" alt="" width="40" height="40" />
         <span>{club.name}</span>
       </a>
       <nav aria-label="Navegación principal">
@@ -29,6 +29,13 @@ const currentYear = new Date().getFullYear();
   <main>
     <section id="inicio" class="hero">
       <div class="container">
+        <img
+          class="hero-logo"
+          src="/escudo.jpg"
+          alt={`Escudo del ${club.shield}`}
+          width="140"
+          height="140"
+        />
         <span class="hero-shield">{club.shield}</span>
         <h1>{club.name}</h1>
         <p class="hero-motto">{club.motto}</p>

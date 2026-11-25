@@ -12,8 +12,6 @@ const {
   description = `${club.name} (${club.short}). ${club.motto}. ${club.campo}, ${club.zona}. Equipo Senior y escuela M8–M18.`,
 } = Astro.props;
 
-const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="26" ry="17" transform="rotate(-30 32 32)" fill="#1b2a4a" stroke="#c8102e" stroke-width="4"/><line x1="22" y1="38" x2="42" y2="26" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/><line x1="27" y1="31" x2="31" y2="37" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/><line x1="33" y1="27" x2="37" y2="33" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/></svg>`;
-const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
 ---
 
 <!doctype html>
@@ -28,7 +26,9 @@ const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={club.name} />
-    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <meta property="og:image" content="https://urc.xvdelcorzo.com/escudo.jpg" />
+    <link rel="icon" type="image/jpeg" href="/escudo.jpg" />
+    <link rel="apple-touch-icon" href="/escudo.jpg" />
   </head>
   <body>
     <slot />
