@@ -1,9 +1,3 @@
-export interface Category {
-  name: string;
-  group: 'Senior' | 'Escuela';
-  description: string;
-}
-
 export const club = {
   name: 'Universitario Cantabria Rugby',
   short: 'URC',
@@ -23,40 +17,7 @@ export const club = {
     hours: '20:00 – 22:00',
   },
   categories: [
-    {
-      name: 'Senior',
-      group: 'Senior',
-      description: 'Equipo absoluto para mayores de 18 años.',
-    },
-    {
-      name: 'M8',
-      group: 'Escuela',
-      description: 'Iniciación lúdica al rugby para los más pequeños.',
-    },
-    {
-      name: 'M10',
-      group: 'Escuela',
-      description: 'Aprendizaje de habilidades básicas, pase y juego en equipo.',
-    },
-    {
-      name: 'M12',
-      group: 'Escuela',
-      description: 'Desarrollo técnico y primeros conceptos tácticos.',
-    },
-    {
-      name: 'M14',
-      group: 'Escuela',
-      description: 'Consolidación del juego colectivo y técnica individual.',
-    },
-    {
-      name: 'M16',
-      group: 'Escuela',
-      description: 'Etapa cadete de formación competitiva y valores del rugby.',
-    },
-    {
-      name: 'M18',
-      group: 'Escuela',
-      description: 'Etapa juvenil de transición hacia el equipo Senior.',
-    },
-  ] satisfies Category[],
+    { name: 'Senior', detail: 'Mayores de 18 años' },
+    { name: 'Escuela', detail: 'M8, M10, M12, M14, M16 y M18 (hasta 18 años)' },
+  ],
 } as const;

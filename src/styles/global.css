@@ -229,44 +229,31 @@ a {
 }
 
 /* Categories */
-.categories-grid {
+.categories-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0;
+  gap: 0.6rem;
 }
 
-.category-card {
-  background-color: var(--white);
-  border: 1px solid var(--border);
-  border-top: 4px solid var(--navy);
-  border-radius: 8px;
-  padding: 1.15rem;
+.categories-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.75rem;
+  align-items: baseline;
+  padding: 0.7rem 1rem;
+  border-left: 4px solid var(--red);
+  border-radius: 6px;
+  background-color: var(--bg-soft);
 }
 
-.category-card.is-senior {
-  border-top-color: var(--red);
-}
-
-.category-group {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--red);
-  margin-bottom: 0.25rem;
-}
-
-.category-card h3 {
-  margin: 0 0 0.4rem;
-  font-size: 1.2rem;
+.categories-list strong {
+  min-width: 5.5rem;
   color: var(--navy);
 }
 
-.category-card p {
-  margin: 0;
-  font-size: 0.94rem;
+.categories-list span {
   color: var(--text-muted);
 }
 
