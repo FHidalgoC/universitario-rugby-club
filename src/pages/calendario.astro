@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { club } from '../data/club';
+import { getMatches, isBye, type Match } from '../lib/calendar';
+
+const matches = await getMatches();
+
+const formatDate = (iso: string) => iso.split('-').reverse().join('/');
+const formatTime = (time: string) => (time === '00:00' ? 'Por confirmar' : time);
+const hasScore = (m: Match) => m.homeScore !== undefined && m.awayScore !== undefined;
+
+function outcome(m: Match) {
+  if (!m.ended || !hasScore(m)) return undefined;
+  const diff = (m.homeScore! - m.awayScore!) * (m.isHome ? 1 : -1);
+  if (diff > 0) return { className: 'win', label: 'Victoria' };
+  if (diff < 0) return { className: 'loss', label: 'Derrota' };
+  return { className: 'draw', label: 'Empate' };
+}
+
+/** Fecha ISO con el desfase de Europe/Madrid; solo la fecha si no hay hora asignada. */
+function startDate(m: Match) {
+  if (m.time === '00:00') return m.date;
+  const offset = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Madrid', timeZoneName: 'longOffset' })
+    .formatToParts(new Date(`${m.date}T${m.time}:00Z`))
+    .find((part) => part.type === 'timeZoneName')!
+    .value.replace('GMT', '');
+  return `${m.date}T${m.time}:00${offset}`;
+}
+
+const team = (name: string) => ({ '@type': 'SportsTeam', name });
+
+const jsonLd = JSON.stringify(
+  matches.filter((m) => !isBye(m)).map((m) => ({
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: `${m.home} vs ${m.away}`,
+    startDate: startDate(m),
+    location: { '@type': 'Place', name: m.venue || 'Campo por confirmar' },
+    homeTeam: team(m.home),
+    awayTeam: team(m.away),
+    sport: 'Rugby',
+    eventStatus: 'https://schema.org/EventScheduled',
+  })),
+).replace(/</g, '\\u003c');
+---
+
+<Base
+  title="Calendario y resultados | Universitario Cantabria Rugby"
+  description="Calendario y resultados del Universitario Cantabria Rugby en la Liga Norte senior masculino: fechas, horarios, campos y marcadores."
+>
+  <SiteHeader current="calendario" />
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Calendario y resultados</h1>
+        <p class="lead">Liga Norte · Senior masculino</p>
+
+        {
+          matches.length > 0 ? (
+            <div class="table-wrapper">
+              <table class="matches">
+                <thead>
+                  <tr>
+                    <th scope="col">Jornada</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Local</th>
+                    <th scope="col">Resultado</th>
+                    <th scope="col">Visitante</th>
+                    <th scope="col">Campo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {matches.map((m) => {
+                    const result = outcome(m);
+                    return (
+                      <tr class={result?.className}>
+                        <td data-label="Jornada">{m.jornada}</td>
+                        <td data-label="Fecha">
+                          <time datetime={m.date}>{formatDate(m.date)}</time>
+                        </td>
+                        <td data-label="Hora">{formatTime(m.time)}</td>
+                        <td data-label="Local" class:list={{ us: m.isHome }}>{m.home}</td>
+                        <td data-label="Resultado" class="score">
+                          {hasScore(m) ? `${m.homeScore} - ${m.awayScore}` : '–'}
+                          {result && <span class="badge">{result.label}</span>}
+                        </td>
+                        <td data-label="Visitante" class:list={{ us: !m.isHome }}>{m.away}</td>
+                        <td data-label="Campo">{m.venue || 'Por confirmar'}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>
+              Ahora mismo no podemos mostrar el calendario. Puedes consultarlo en la{' '}
+              <a href={club.calendarSourceUrl} target="_blank" rel="noopener noreferrer">
+                web de la federación
+              </a>
+              .
+            </p>
+          )
+        }
+
+        <p class="source">
+          Fuente:{' '}
+          <a href={club.calendarSourceUrl} target="_blank" rel="noopener noreferrer">
+            Federación Cántabra de Rugby
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+
+  {matches.length > 0 && <script is:inline type="application/ld+json" set:html={jsonLd} />}
+</Base>
+
+<style>
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .matches {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .matches th,
+  .matches td {
+    padding: 0.65rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  .us {
+    font-weight: 700;
+  }
+
+  .score {
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: #fff;
+  }
+
+  .win .badge { background: #1b6e3a; }
+  .loss .badge { background: #a52a2a; }
+  .draw .badge { background: #555; }
+  .win td:first-child { box-shadow: inset 4px 0 #1b6e3a; }
+  .loss td:first-child { box-shadow: inset 4px 0 #a52a2a; }
+  .draw td:first-child { box-shadow: inset 4px 0 #555; }
+
+  .source {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* En pantallas estrechas cada partido se muestra como una tarjeta. */
+  @media (max-width: 760px) {
+    .matches thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .matches,
+    .matches tbody,
+    .matches tr,
+    .matches td {
+      display: block;
+    }
+
+    .matches tr {
+      margin-bottom: 1rem;
+      border: 1px solid rgb(0 0 0 / 0.15);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .matches td {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      text-align: right;
+    }
+
+    .matches td::before {
+      content: attr(data-label);
+      font-weight: 400;
+      text-align: left;
+      opacity: 0.7;
+    }
+  }
+</style>

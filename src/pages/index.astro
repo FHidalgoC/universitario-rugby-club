@@ -1,30 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { club } from '../data/club';
+import { getMatches, getNextMatch, getLastResult } from '../lib/calendar';
+
+const matches = await getMatches();
+const nextMatch = getNextMatch(matches);
+const lastResult = getLastResult(matches);
+const formatDate = (iso: string) =>
+  new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
+    new Date(`${iso}T12:00:00Z`),
+  );
 
 const encodedQuery = encodeURIComponent(club.mapsQuery);
 const mapEmbedUrl = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
 const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
-const currentYear = new Date().getFullYear();
 ---
 
 <Base>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#inicio">
-        <img class="brand-logo" src="/escudo.jpg" alt="" width="40" height="40" />
-        <span>{club.name}</span>
-      </a>
-      <nav aria-label="Navegación principal">
-        <ul class="nav-links">
-          <li><a href="#entrenamientos">Entrenos</a></li>
-          <li><a href="#quienes-somos">El club</a></li>
-          <li><a href="#categorias">Categorías</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <SiteHeader />
 
   <main>
     <section id="inicio" class="hero">
@@ -37,7 +32,10 @@ const currentYear = new Date().getFullYear();
           height="140"
         />
         <span class="hero-shield">{club.shield}</span>
-        <h1>{club.name}</h1>
+        <h1>
+          {club.name}
+          <span class="hero-subtitle">Club de rugby en Santander, Cantabria</span>
+        </h1>
         <p class="hero-motto">{club.motto}</p>
 
         <a class="training-card" href="#entrenamientos">
@@ -91,16 +89,54 @@ const currentYear = new Date().getFullYear();
       </div>
     </section>
 
-    <section id="quienes-somos" class="section section-alt">
+    <section id="partidos" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Partidos</h2>
+        {
+          nextMatch || lastResult ? (
+            <div class="schedule-grid">
+              {nextMatch && (
+                <div class="schedule-item">
+                  <span class="schedule-label">Próximo partido · Jornada {nextMatch.jornada}</span>
+                  <strong>{nextMatch.home} vs {nextMatch.away}</strong>
+                  <span>
+                    <time datetime={nextMatch.date}>{formatDate(nextMatch.date)}</time>
+                    {nextMatch.time !== '00:00' && ` · ${nextMatch.time}`}
+                  </span>
+                  {nextMatch.venue && <span>{nextMatch.venue}</span>}
+                </div>
+              )}
+              {lastResult && (
+                <div class="schedule-item">
+                  <span class="schedule-label">Último resultado · Jornada {lastResult.jornada}</span>
+                  <strong>
+                    {lastResult.home} {lastResult.homeScore} – {lastResult.awayScore} {lastResult.away}
+                  </strong>
+                  <span>
+                    <time datetime={lastResult.date}>{formatDate(lastResult.date)}</time>
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p class="lead">Consulta las fechas de la temporada en el calendario de la Liga Norte.</p>
+          )
+        }
+        <a class="btn btn-navy" href="/calendario/">Ver calendario completo</a>
+      </div>
+    </section>
+
+    <section id="quienes-somos" class="section">
       <div class="container">
         <h2 class="section-title">Quiénes somos</h2>
         <p class="lead">{club.about}</p>
       </div>
     </section>
 
-    <section id="categorias" class="section">
+    <section id="categorias" class="section section-alt">
       <div class="container">
         <h2 class="section-title">Categorías</h2>
+        <p class="lead">{club.categoriesIntro}</p>
         <ul class="categories-list">
           {
             club.categories.map((cat) => (
@@ -114,7 +150,7 @@ const currentYear = new Date().getFullYear();
       </div>
     </section>
 
-    <section id="contacto" class="section section-alt">
+    <section id="contacto" class="section">
       <div class="container">
         <h2 class="section-title">Contacto</h2>
         <p class="lead">
@@ -133,12 +169,5 @@ const currentYear = new Date().getFullYear();
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>&copy; {currentYear} {club.name} ({club.short})</span>
-      <a href={club.instagram} target="_blank" rel="noopener noreferrer">
-        {club.instagramHandle}
-      </a>
-    </div>
-  </footer>
+  <SiteFooter />
 </Base>

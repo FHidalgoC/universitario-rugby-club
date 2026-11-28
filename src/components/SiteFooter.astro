@@ -1,0 +1,40 @@
+---
+import { club } from '../data/club';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-main">
+      <span>&copy; {currentYear} {club.name} ({club.short})</span>
+      <a href={club.instagram} target="_blank" rel="noopener noreferrer">
+        {club.instagramHandle}
+      </a>
+    </div>
+    <div class="footer-collaborators">
+      <span class="footer-collaborators-label">Con la colaboración de</span>
+      <ul class="footer-collaborators-list">
+        {
+          club.collaborators.map((collab) => (
+            <li>
+              {collab.url ? (
+                <a href={collab.url} target="_blank" rel="noopener noreferrer">
+                  {collab.logo ? (
+                    <img src={collab.logo} alt={collab.name} loading="lazy" />
+                  ) : (
+                    collab.name
+                  )}
+                </a>
+              ) : collab.logo ? (
+                <img src={collab.logo} alt={collab.name} loading="lazy" />
+              ) : (
+                <span>{collab.name}</span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>

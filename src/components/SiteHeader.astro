@@ -1,0 +1,38 @@
+---
+import { club } from '../data/club';
+
+interface Props {
+  current?: 'calendario';
+}
+
+const { current } = Astro.props;
+const links = [
+  { href: '/#entrenamientos', label: 'Entrenos' },
+  { href: '/#quienes-somos', label: 'El club' },
+  { href: '/#categorias', label: 'Categorías' },
+  { href: '/calendario/', label: 'Calendario', key: 'calendario' },
+  { href: '/#contacto', label: 'Contacto' },
+];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/#inicio">
+      <img class="brand-logo" src="/escudo.jpg" alt="" width="40" height="40" />
+      <span>{club.name}</span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <ul class="nav-links">
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={link.key && link.key === current ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
